@@ -1,6 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const DEFAULT_SETTINGS = {
+  titre: 'Kwabo !',
+  sous_titre: 'Confirmez votre présence au lancement officiel de Synelia Bénin',
+  lieu: 'Golden Tulip, Cotonou',
+  date_evenement: '22 octobre 2026',
+  intro:
+    'Pour une meilleure organisation et nous permettre de vous accueillir dans de meilleures conditions, veuillez renseigner le formulaire ci-dessous.',
+};
 
 const ATELIERS = [
   {
@@ -27,6 +36,16 @@ export default function Home() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.ok && d.settings) setSettings({ ...DEFAULT_SETTINGS, ...d.settings });
+      })
+      .catch(() => {});
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -78,9 +97,12 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
           <div>
-            <h1>Synelia Bénin</h1>
-            <p className="subtitle">Confirmation de présence</p>
+            <h1>{settings.titre}</h1>
+            <p className="subtitle">{settings.sous_titre}</p>
           </div>
+        </div>
+        <div className="event-meta">
+          📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
         </div>
         <div className="card form-success">
           <div className="fs-icon">✓</div>
@@ -101,10 +123,14 @@ export default function Home() {
       <div className="header-title">
         <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
         <div>
-          <h1>Synelia Bénin</h1>
-          <p className="subtitle">Merci de confirmer votre présence à l'événement</p>
+          <h1>{settings.titre}</h1>
+          <p className="subtitle">{settings.sous_titre}</p>
         </div>
       </div>
+      <div className="event-meta">
+        📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
+      </div>
+      <p className="intro-text">{settings.intro}</p>
 
       <div className="programme">
         <h2>Programme de la journée</h2>

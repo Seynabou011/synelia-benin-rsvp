@@ -15,6 +15,10 @@ export default function Admin() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [settings, setSettings] = useState(null);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [settingsSaved, setSettingsSaved] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/me')
@@ -22,7 +26,10 @@ export default function Admin() {
       .then((d) => {
         setIsAdmin(!!d.isAdmin);
         setChecking(false);
-        if (d.isAdmin) loadRows();
+        if (d.isAdmin) {
+          loadRows();
+          loadSettings();
+        }
       })
       .catch(() => setChecking(false));
   }, []);
@@ -35,6 +42,33 @@ export default function Admin() {
       if (data.ok) setRows(data.rows);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadSettings() {
+    const res = await fetch('/api/settings');
+    const data = await res.json();
+    if (data.ok) setSettings(data.settings);
+  }
+
+  async function saveSettings(e) {
+    e.preventDefault();
+    setSettingsSaving(true);
+    setSettingsSaved(false);
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setSettings(data.settings);
+        setSettingsSaved(true);
+        setTimeout(() => setSettingsSaved(false), 2500);
+      }
+    } finally {
+      setSettingsSaving(false);
     }
   }
 
@@ -139,6 +173,9 @@ export default function Admin() {
           </div>
         </div>
         <div className="admin-actions">
+          <button className="btn" onClick={() => setSettingsOpen((o) => !o)}>
+            {settingsOpen ? 'Fermer les réglages' : 'Réglages du formulaire'}
+          </button>
           <button className="btn" onClick={loadRows} disabled={loading}>
             {loading ? 'Actualisation…' : 'Actualiser'}
           </button>
@@ -148,6 +185,48 @@ export default function Admin() {
           <button className="btn" onClick={handleLogout}>Se déconnecter</button>
         </div>
       </div>
+
+      {settingsOpen && settings && (
+        <form className="card" onSubmit={saveSettings}>
+          <h2 style={{ marginTop: 0, fontFamily: 'var(--font-display)', color: 'var(--color-primary-dark)' }}>
+            Réglages du formulaire
+          </h2>
+          <label>Titre d'accueil (ex : Kwabo !)</label>
+          <input
+            type="text"
+            value={settings.titre}
+            onChange={(e) => setSettings({ ...settings, titre: e.target.value })}
+          />
+          <label>Message d'accueil</label>
+          <input
+            type="text"
+            value={settings.sous_titre}
+            onChange={(e) => setSettings({ ...settings, sous_titre: e.target.value })}
+          />
+          <label>Lieu</label>
+          <input
+            type="text"
+            value={settings.lieu}
+            onChange={(e) => setSettings({ ...settings, lieu: e.target.value })}
+          />
+          <label>Date de l'événement</label>
+          <input
+            type="text"
+            value={settings.date_evenement}
+            onChange={(e) => setSettings({ ...settings, date_evenement: e.target.value })}
+          />
+          <label>Texte d'introduction</label>
+          <input
+            type="text"
+            value={settings.intro}
+            onChange={(e) => setSettings({ ...settings, intro: e.target.value })}
+          />
+          <button type="submit" className="btn primary" style={{ marginTop: 16 }} disabled={settingsSaving}>
+            {settingsSaving ? 'Enregistrement…' : 'Enregistrer'}
+          </button>
+          {settingsSaved && <span style={{ marginLeft: 12, color: 'var(--color-success)', fontSize: 13 }}>Enregistré ✓</span>}
+        </form>
+      )}
 
       <div className="stats-row">
         <div className="stat-box">

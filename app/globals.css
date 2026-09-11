@@ -53,6 +53,25 @@ h1{
 }
 .subtitle{color:var(--color-text-sub);margin:0;font-size:13px;}
 
+.event-meta{
+  margin-top:var(--space-md);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--color-primary-mist);
+  color:var(--color-primary-dark);
+  font-weight:700;
+  font-size:13px;
+  padding:8px 16px;
+  border-radius:var(--radius-pill);
+}
+.intro-text{
+  margin-top:var(--space-md);
+  color:var(--color-text-sub);
+  font-size:13.5px;
+  line-height:1.5;
+}
+
 .card{
   background:#fff;
   border-radius:var(--radius-lg);

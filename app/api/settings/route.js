@@ -1,0 +1,31 @@
+import { NextResponse } from 'next/server';
+import { getSettings, updateSettings } from '../../../lib/db';
+import { isAdminRequest } from '../../../lib/auth';
+
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+  const settings = await getSettings();
+  return NextResponse.json({ ok: true, settings });
+}
+
+export async function PUT(req) {
+  if (!isAdminRequest(req)) {
+    return NextResponse.json({ ok: false, error: 'Non autorisé' }, { status: 401 });
+  }
+  let body;
+  try {
+    body = await req.json();
+  } catch (e) {
+    return NextResponse.json({ ok: false, error: 'Requête invalide' }, { status: 400 });
+  }
+  const partial = {
+    titre: (body?.titre ?? '').toString().trim(),
+    sous_titre: (body?.sous_titre ?? '').toString().trim(),
+    lieu: (body?.lieu ?? '').toString().trim(),
+    date_evenement: (body?.date_evenement ?? '').toString().trim(),
+    intro: (body?.intro ?? '').toString().trim(),
+  };
+  const settings = await updateSettings(partial);
+  return NextResponse.json({ ok: true, settings });
+}
