@@ -29,5 +29,11 @@ export async function PUT(req) {
     intro: (body?.intro ?? '').toString().trim(),
   };
   const settings = await updateSettings(partial);
-  return NextResponse.json({ ok: true, settings });
+  const dbg = await sql`SELECT current_database() AS db`;
+  return NextResponse.json({
+    ok: true,
+    settings,
+    dbg: dbg.rows[0],
+    envHost: (process.env.POSTGRES_URL || '').split('@')[1],
+  });
 }
