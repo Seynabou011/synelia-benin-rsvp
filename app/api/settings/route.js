@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { sql } from '@vercel/postgres';
 import { getSettings, updateSettings } from '../../../lib/db';
 import { isAdminRequest } from '../../../lib/auth';
 
@@ -6,7 +7,8 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const settings = await getSettings();
-  return NextResponse.json({ ok: true, settings });
+  const dbg = await sql`SELECT current_database() AS db, inet_server_addr()::text AS addr`;
+  return NextResponse.json({ ok: true, settings, dbg: dbg.rows[0], envHost: (process.env.POSTGRES_URL || '').split('@')[1] });
 }
 
 export async function PUT(req) {
