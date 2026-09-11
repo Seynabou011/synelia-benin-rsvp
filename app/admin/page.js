@@ -230,6 +230,51 @@ export default function Admin() {
               color: 'var(--color-text)',
             }}
           />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Ateliers de l'après-midi</h3>
+
+          <label>Atelier 1 — Titre</label>
+          <input
+            type="text"
+            value={settings.atelier1_titre || ''}
+            onChange={(e) => setSettings({ ...settings, atelier1_titre: e.target.value })}
+          />
+          <label>Atelier 1 — Description</label>
+          <input
+            type="text"
+            value={settings.atelier1_desc || ''}
+            onChange={(e) => setSettings({ ...settings, atelier1_desc: e.target.value })}
+          />
+          <label>Atelier 2 — Titre</label>
+          <input
+            type="text"
+            value={settings.atelier2_titre || ''}
+            onChange={(e) => setSettings({ ...settings, atelier2_titre: e.target.value })}
+          />
+          <label>Atelier 2 — Description</label>
+          <input
+            type="text"
+            value={settings.atelier2_desc || ''}
+            onChange={(e) => setSettings({ ...settings, atelier2_desc: e.target.value })}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Période d'ouverture du formulaire</h3>
+          <p style={{ margin: '0 0 8px', fontSize: 12, color: 'var(--color-text-muted)' }}>
+            Heures locales du Bénin. Laisser vide = pas de limite. Passé la date de fin, le formulaire public affiche un message de fermeture et refuse les nouvelles réponses.
+          </p>
+          <label>Date/heure d'ouverture</label>
+          <input
+            type="datetime-local"
+            value={settings.date_debut || ''}
+            onChange={(e) => setSettings({ ...settings, date_debut: e.target.value })}
+          />
+          <label>Date/heure de fermeture</label>
+          <input
+            type="datetime-local"
+            value={settings.date_fin || ''}
+            onChange={(e) => setSettings({ ...settings, date_fin: e.target.value })}
+          />
+
           <button type="submit" className="btn primary" style={{ marginTop: 16 }} disabled={settingsSaving}>
             {settingsSaving ? 'Enregistrement…' : 'Enregistrer'}
           </button>

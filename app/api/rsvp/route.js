@@ -1,10 +1,23 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
-import { ensureSchema } from '../../../lib/db';
+import { ensureSchema, getSettings, isFormOpen } from '../../../lib/db';
 import { isAdminRequest } from '../../../lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
   await ensureSchema();
+
+  const settings = await getSettings();
+  const { open, reason } = isFormOpen(settings);
+  if (!open) {
+    const message =
+      reason === 'pas-encore-ouvert'
+        ? "Le formulaire de confirmation n'est pas encore ouvert."
+        : "Le formulaire de confirmation est désormais fermé. Merci de contacter l'organisation si besoin.";
+    return NextResponse.json({ ok: false, error: message }, { status: 403 });
+  }
+
   let body;
   try {
     body = await req.json();

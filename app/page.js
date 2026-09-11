@@ -9,20 +9,23 @@ const DEFAULT_SETTINGS = {
   date_evenement: '22 octobre 2026',
   intro:
     "Bonjour à tous,\n\nL'évènement se déroulera en 2 étapes : la table ronde en matinée et les ateliers l'après-midi.\n\nAfin d'organiser au mieux cet événement et de préparer un accueil optimal, merci de confirmer votre présence en remplissant ce formulaire.\n\nNous avons hâte d'échanger avec vous autour du thème : Du code du numérique à l'IA — accélérer la transformation numérique du Bénin en renforçant sa souveraineté.",
+  atelier1_titre: 'Atelier 1 — Accélérer',
+  atelier1_desc:
+    "L'IA en action : cas d'usage concrets pour les banques, l'administration et les entreprises",
+  atelier2_titre: 'Atelier 2 — Renforcer',
+  atelier2_desc: 'Cloud, données et cybersécurité : bâtir une infrastructure souveraine et résiliente',
+  date_debut: '',
+  date_fin: '',
 };
 
-const ATELIERS = [
-  {
-    value: 'atelier1',
-    title: 'Atelier 1 — Accélérer',
-    desc: "L'IA en action : cas d'usage concrets pour les banques, l'administration et les entreprises",
-  },
-  {
-    value: 'atelier2',
-    title: 'Atelier 2 — Renforcer',
-    desc: 'Cloud, données et cybersécurité : bâtir une infrastructure souveraine et résiliente',
-  },
-];
+function isFormOpen(settings, now = new Date()) {
+  const parse = (s) => (s ? new Date(s + ':00+01:00') : null);
+  const debut = parse(settings?.date_debut);
+  const fin = parse(settings?.date_fin);
+  if (debut && now < debut) return { open: false, reason: 'pas-encore-ouvert' };
+  if (fin && now > fin) return { open: false, reason: 'ferme' };
+  return { open: true, reason: null };
+}
 
 export default function Home() {
   const [nom, setNom] = useState('');
@@ -89,6 +92,44 @@ export default function Home() {
       setError('Impossible d’envoyer votre réponse. Vérifiez votre connexion et réessayez.');
       setSubmitting(false);
     }
+  }
+
+  const ATELIERS = [
+    { value: 'atelier1', title: settings.atelier1_titre, desc: settings.atelier1_desc },
+    { value: 'atelier2', title: settings.atelier2_titre, desc: settings.atelier2_desc },
+  ];
+
+  const { open: formOpen, reason: closedReason } = isFormOpen(settings);
+
+  if (!done && !formOpen) {
+    return (
+      <div className="page">
+        <div className="header-title">
+          <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
+          <div>
+            <h1>{settings.titre}*</h1>
+            <p className="subtitle">{settings.sous_titre}</p>
+          </div>
+        </div>
+        <p className="kwabo-note">* Kwabo signifie « Bienvenue »</p>
+        <div className="event-meta">
+          📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
+        </div>
+        <div className="card form-success">
+          <h2>
+            {closedReason === 'pas-encore-ouvert'
+              ? "Le formulaire n'est pas encore ouvert"
+              : 'Le formulaire de confirmation est fermé'}
+          </h2>
+          <p>
+            {closedReason === 'pas-encore-ouvert'
+              ? 'Merci de revenir un peu plus tard pour confirmer votre présence.'
+              : "La période de confirmation est terminée. Merci de contacter l'organisation si vous avez une question."}
+          </p>
+        </div>
+        <p className="footer-note">Synelia — synelia.tech</p>
+      </div>
+    );
   }
 
   if (done) {

@@ -28,6 +28,12 @@ export async function PUT(req) {
     lieu: (body?.lieu ?? '').toString().trim(),
     date_evenement: (body?.date_evenement ?? '').toString().trim(),
     intro: (body?.intro ?? '').toString().trim(),
+    atelier1_titre: (body?.atelier1_titre ?? '').toString().trim(),
+    atelier1_desc: (body?.atelier1_desc ?? '').toString().trim(),
+    atelier2_titre: (body?.atelier2_titre ?? '').toString().trim(),
+    atelier2_desc: (body?.atelier2_desc ?? '').toString().trim(),
+    date_debut: (body?.date_debut ?? '').toString().trim(),
+    date_fin: (body?.date_fin ?? '').toString().trim(),
   };
   const settings = await updateSettings(partial);
   return NextResponse.json(
