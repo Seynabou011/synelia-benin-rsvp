@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 
 const DEFAULT_SETTINGS = {
-  titre: 'Kwabo !',
-  sous_titre: 'Confirmez votre présence au lancement officiel de Synelia Bénin',
+  titre: 'Kwabo',
+  sous_titre: 'sur le formulaire de confirmation de présence au lancement officiel de Synelia Bénin',
   lieu: 'Golden Tulip, Cotonou',
   date_evenement: '22 octobre 2026',
   intro:
@@ -131,23 +131,6 @@ export default function Home() {
         📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
       </div>
       <p className="intro-text">{settings.intro}</p>
-
-      <div className="programme">
-        <h2>Programme de la journée</h2>
-        <div className="theme">
-          Thème : Du code du numérique à l'IA — accélérer la transformation numérique du Bénin en renforçant sa souveraineté
-        </div>
-        <dl>
-          <dt>Table ronde</dt>
-          <dd>À l'ère de l'IA et du cloud, comment le Bénin peut-il concilier innovation et souveraineté numérique ?</dd>
-          <dt>Atelier 1 — Accélérer</dt>
-          <dd>L'IA en action : cas d'usage concrets pour les banques, l'administration et les entreprises</dd>
-          <dt>Atelier 2 — Renforcer</dt>
-          <dd>Cloud, données et cybersécurité : bâtir une infrastructure souveraine et résiliente</dd>
-          <dt>Clôture</dt>
-          <dd>Restitution croisée : accélérer et renforcer, les deux faces d'une même ambition</dd>
-        </dl>
-      </div>
 
       <form className="card" onSubmit={handleSubmit}>
         <label className="required">Serez-vous présent(e) ?</label>
