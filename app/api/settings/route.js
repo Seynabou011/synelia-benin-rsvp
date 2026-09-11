@@ -34,6 +34,10 @@ export async function PUT(req) {
     atelier2_desc: (body?.atelier2_desc ?? '').toString().trim(),
     date_debut: (body?.date_debut ?? '').toString().trim(),
     date_fin: (body?.date_fin ?? '').toString().trim(),
+    pas_ouvert_titre: (body?.pas_ouvert_titre ?? '').toString().trim(),
+    pas_ouvert_message: (body?.pas_ouvert_message ?? '').toString().trim(),
+    ferme_titre: (body?.ferme_titre ?? '').toString().trim(),
+    ferme_message: (body?.ferme_message ?? '').toString().trim(),
   };
   const settings = await updateSettings(partial);
   return NextResponse.json(

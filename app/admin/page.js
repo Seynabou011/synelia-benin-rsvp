@@ -1,11 +1,94 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const ATELIER_LABEL = {
   atelier1: 'Atelier 1 — Accélérer',
   atelier2: 'Atelier 2 — Renforcer',
 };
+
+const fieldStyle = {
+  width: '100%',
+  padding: '10px 12px',
+  border: '1px solid var(--color-primary-lav)',
+  borderRadius: 'var(--radius-sm)',
+  fontFamily: 'var(--font-body)',
+  fontSize: 14,
+  color: 'var(--color-text)',
+};
+
+// Champ texte/textarea avec un bouton "G" qui met en gras (**texte**) la portion sélectionnée.
+// Le rendu de ce balisage se fait via le composant <Rich> sur le formulaire public.
+function BoldField({ label, value, onChange, multiline, rows }) {
+  const ref = useRef(null);
+
+  function applyBold() {
+    const el = ref.current;
+    if (!el) return;
+    const val = value || '';
+    const start = el.selectionStart ?? val.length;
+    const end = el.selectionEnd ?? val.length;
+    if (start === end) {
+      const placeholder = 'texte en gras';
+      const next = val.slice(0, start) + '**' + placeholder + '**' + val.slice(end);
+      onChange(next);
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(start + 2, start + 2 + placeholder.length);
+      });
+    } else {
+      const selected = val.slice(start, end);
+      const next = val.slice(0, start) + '**' + selected + '**' + val.slice(end);
+      onChange(next);
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(start + 2, end + 2);
+      });
+    }
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'var(--space-md)' }}>
+        <label style={{ margin: 0 }}>{label}</label>
+        <button
+          type="button"
+          onClick={applyBold}
+          title="Mettre le texte sélectionné en gras"
+          style={{
+            fontWeight: 700,
+            border: '1px solid var(--color-primary-lav)',
+            background: '#fff',
+            borderRadius: 6,
+            padding: '2px 10px',
+            cursor: 'pointer',
+            fontSize: 12,
+            color: 'var(--color-primary-dark)',
+          }}
+        >
+          G
+        </button>
+      </div>
+      {multiline ? (
+        <textarea
+          ref={ref}
+          rows={rows || 4}
+          value={value || ''}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ ...fieldStyle, marginTop: 6 }}
+        />
+      ) : (
+        <input
+          ref={ref}
+          type="text"
+          value={value || ''}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ marginTop: 6 }}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function Admin() {
   const [checking, setChecking] = useState(true);
@@ -191,17 +274,19 @@ export default function Admin() {
           <h2 style={{ marginTop: 0, fontFamily: 'var(--font-display)', color: 'var(--color-primary-dark)' }}>
             Réglages du formulaire
           </h2>
-          <label>Titre d'accueil (ex : Kwabo !)</label>
-          <input
-            type="text"
+          <p style={{ margin: '0 0 8px', fontSize: 12, color: 'var(--color-text-muted)' }}>
+            Sélectionnez une portion de texte dans un champ puis cliquez sur le bouton <strong>G</strong> pour la mettre en gras sur le formulaire public.
+          </p>
+
+          <BoldField
+            label="Titre d'accueil (ex : Kwabo)"
             value={settings.titre}
-            onChange={(e) => setSettings({ ...settings, titre: e.target.value })}
+            onChange={(v) => setSettings({ ...settings, titre: v })}
           />
-          <label>Message d'accueil</label>
-          <input
-            type="text"
+          <BoldField
+            label="Message d'accueil"
             value={settings.sous_titre}
-            onChange={(e) => setSettings({ ...settings, sous_titre: e.target.value })}
+            onChange={(v) => setSettings({ ...settings, sous_titre: v })}
           />
           <label>Lieu</label>
           <input
@@ -215,52 +300,40 @@ export default function Admin() {
             value={settings.date_evenement}
             onChange={(e) => setSettings({ ...settings, date_evenement: e.target.value })}
           />
-          <label>Texte d'introduction (un saut de ligne = un nouveau paragraphe)</label>
-          <textarea
-            rows={6}
+          <BoldField
+            label="Texte d'introduction (un saut de ligne = un nouveau paragraphe)"
             value={settings.intro}
-            onChange={(e) => setSettings({ ...settings, intro: e.target.value })}
-            style={{
-              width: '100%',
-              padding: '10px 12px',
-              border: '1px solid var(--color-primary-lav)',
-              borderRadius: 'var(--radius-sm)',
-              fontFamily: 'var(--font-body)',
-              fontSize: 14,
-              color: 'var(--color-text)',
-            }}
+            onChange={(v) => setSettings({ ...settings, intro: v })}
+            multiline
+            rows={6}
           />
 
           <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Ateliers de l'après-midi</h3>
 
-          <label>Atelier 1 — Titre</label>
-          <input
-            type="text"
-            value={settings.atelier1_titre || ''}
-            onChange={(e) => setSettings({ ...settings, atelier1_titre: e.target.value })}
+          <BoldField
+            label="Atelier 1 — Titre"
+            value={settings.atelier1_titre}
+            onChange={(v) => setSettings({ ...settings, atelier1_titre: v })}
           />
-          <label>Atelier 1 — Description</label>
-          <input
-            type="text"
-            value={settings.atelier1_desc || ''}
-            onChange={(e) => setSettings({ ...settings, atelier1_desc: e.target.value })}
+          <BoldField
+            label="Atelier 1 — Description"
+            value={settings.atelier1_desc}
+            onChange={(v) => setSettings({ ...settings, atelier1_desc: v })}
           />
-          <label>Atelier 2 — Titre</label>
-          <input
-            type="text"
-            value={settings.atelier2_titre || ''}
-            onChange={(e) => setSettings({ ...settings, atelier2_titre: e.target.value })}
+          <BoldField
+            label="Atelier 2 — Titre"
+            value={settings.atelier2_titre}
+            onChange={(v) => setSettings({ ...settings, atelier2_titre: v })}
           />
-          <label>Atelier 2 — Description</label>
-          <input
-            type="text"
-            value={settings.atelier2_desc || ''}
-            onChange={(e) => setSettings({ ...settings, atelier2_desc: e.target.value })}
+          <BoldField
+            label="Atelier 2 — Description"
+            value={settings.atelier2_desc}
+            onChange={(v) => setSettings({ ...settings, atelier2_desc: v })}
           />
 
           <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Période d'ouverture du formulaire</h3>
           <p style={{ margin: '0 0 8px', fontSize: 12, color: 'var(--color-text-muted)' }}>
-            Heures locales du Bénin. Laisser vide = pas de limite. Passé la date de fin, le formulaire public affiche un message de fermeture et refuse les nouvelles réponses.
+            Heures locales du Bénin. Laisser vide = pas de limite. Passé la date de fin, le formulaire public affiche le message de fermeture ci-dessous et refuse les nouvelles réponses.
           </p>
           <label>Date/heure d'ouverture</label>
           <input
@@ -273,6 +346,34 @@ export default function Admin() {
             type="datetime-local"
             value={settings.date_fin || ''}
             onChange={(e) => setSettings({ ...settings, date_fin: e.target.value })}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Message avant ouverture</h3>
+          <BoldField
+            label="Titre"
+            value={settings.pas_ouvert_titre}
+            onChange={(v) => setSettings({ ...settings, pas_ouvert_titre: v })}
+          />
+          <BoldField
+            label="Message"
+            value={settings.pas_ouvert_message}
+            onChange={(v) => setSettings({ ...settings, pas_ouvert_message: v })}
+            multiline
+            rows={3}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Message après fermeture</h3>
+          <BoldField
+            label="Titre"
+            value={settings.ferme_titre}
+            onChange={(v) => setSettings({ ...settings, ferme_titre: v })}
+          />
+          <BoldField
+            label="Message"
+            value={settings.ferme_message}
+            onChange={(v) => setSettings({ ...settings, ferme_message: v })}
+            multiline
+            rows={3}
           />
 
           <button type="submit" className="btn primary" style={{ marginTop: 16 }} disabled={settingsSaving}>

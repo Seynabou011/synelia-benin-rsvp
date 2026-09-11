@@ -16,6 +16,11 @@ const DEFAULT_SETTINGS = {
   atelier2_desc: 'Cloud, données et cybersécurité : bâtir une infrastructure souveraine et résiliente',
   date_debut: '',
   date_fin: '',
+  pas_ouvert_titre: "Le formulaire n'est pas encore ouvert",
+  pas_ouvert_message: 'Merci de revenir un peu plus tard pour confirmer votre présence.',
+  ferme_titre: 'Le formulaire de confirmation est fermé',
+  ferme_message:
+    "La période de confirmation est terminée. Merci de contacter l'organisation si vous avez une question.",
 };
 
 function isFormOpen(settings, now = new Date()) {
@@ -25,6 +30,19 @@ function isFormOpen(settings, now = new Date()) {
   if (debut && now < debut) return { open: false, reason: 'pas-encore-ouvert' };
   if (fin && now > fin) return { open: false, reason: 'ferme' };
   return { open: true, reason: null };
+}
+
+// Rendu simple d'un texte pouvant contenir du **gras** défini depuis le back office.
+function Rich({ text }) {
+  if (!text) return null;
+  const parts = String(text).split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) =>
+    part.startsWith('**') && part.endsWith('**') && part.length > 4 ? (
+      <strong key={i}>{part.slice(2, -2)}</strong>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
 }
 
 export default function Home() {
@@ -107,8 +125,8 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
           <div>
-            <h1>{settings.titre}</h1>
-            <p className="subtitle">{settings.sous_titre}</p>
+            <h1><Rich text={settings.titre} /></h1>
+            <p className="subtitle"><Rich text={settings.sous_titre} /></p>
           </div>
         </div>
         <div className="event-meta">
@@ -116,14 +134,22 @@ export default function Home() {
         </div>
         <div className="card form-success">
           <h2>
-            {closedReason === 'pas-encore-ouvert'
-              ? "Le formulaire n'est pas encore ouvert"
-              : 'Le formulaire de confirmation est fermé'}
+            <Rich
+              text={
+                closedReason === 'pas-encore-ouvert'
+                  ? settings.pas_ouvert_titre
+                  : settings.ferme_titre
+              }
+            />
           </h2>
           <p>
-            {closedReason === 'pas-encore-ouvert'
-              ? 'Merci de revenir un peu plus tard pour confirmer votre présence.'
-              : "La période de confirmation est terminée. Merci de contacter l'organisation si vous avez une question."}
+            <Rich
+              text={
+                closedReason === 'pas-encore-ouvert'
+                  ? settings.pas_ouvert_message
+                  : settings.ferme_message
+              }
+            />
           </p>
         </div>
       </div>
@@ -136,8 +162,8 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
           <div>
-            <h1>{settings.titre}</h1>
-            <p className="subtitle">{settings.sous_titre}</p>
+            <h1><Rich text={settings.titre} /></h1>
+            <p className="subtitle"><Rich text={settings.sous_titre} /></p>
           </div>
         </div>
         <div className="event-meta">
@@ -161,14 +187,14 @@ export default function Home() {
       <div className="header-title">
         <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
         <div>
-          <h1>{settings.titre}</h1>
-          <p className="subtitle">{settings.sous_titre}</p>
+          <h1><Rich text={settings.titre} /></h1>
+          <p className="subtitle"><Rich text={settings.sous_titre} /></p>
         </div>
       </div>
       <div className="event-meta">
         📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
       </div>
-      <p className="intro-text">{settings.intro}</p>
+      <p className="intro-text"><Rich text={settings.intro} /></p>
 
       <form className="card" onSubmit={handleSubmit}>
         <label className="required">Serez-vous présent(e) ?</label>
@@ -227,8 +253,8 @@ export default function Home() {
                     onChange={() => setAtelier(a.value)}
                   />
                   <div>
-                    <div className="ro-title">{a.title}</div>
-                    <div className="ro-desc">{a.desc}</div>
+                    <div className="ro-title"><Rich text={a.title} /></div>
+                    <div className="ro-desc"><Rich text={a.desc} /></div>
                   </div>
                 </label>
               ))}
