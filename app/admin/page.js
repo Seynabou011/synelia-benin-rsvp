@@ -215,11 +215,20 @@ export default function Admin() {
             value={settings.date_evenement}
             onChange={(e) => setSettings({ ...settings, date_evenement: e.target.value })}
           />
-          <label>Texte d'introduction</label>
-          <input
-            type="text"
+          <label>Texte d'introduction (un saut de ligne = un nouveau paragraphe)</label>
+          <textarea
+            rows={6}
             value={settings.intro}
             onChange={(e) => setSettings({ ...settings, intro: e.target.value })}
+            style={{
+              width: '100%',
+              padding: '10px 12px',
+              border: '1px solid var(--color-primary-lav)',
+              borderRadius: 'var(--radius-sm)',
+              fontFamily: 'var(--font-body)',
+              fontSize: 14,
+              color: 'var(--color-text)',
+            }}
           />
           <button type="submit" className="btn primary" style={{ marginTop: 16 }} disabled={settingsSaving}>
             {settingsSaving ? 'Enregistrement…' : 'Enregistrer'}

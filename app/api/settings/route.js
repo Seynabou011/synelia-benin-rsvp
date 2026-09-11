@@ -5,12 +5,8 @@ import { isAdminRequest } from '../../../lib/auth';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  try {
-    const settings = await getSettings();
-    return NextResponse.json({ ok: true, settings });
-  } catch (e) {
-    return NextResponse.json({ ok: false, error: String(e && e.message || e), stack: String(e && e.stack || '') }, { status: 500 });
-  }
+  const settings = await getSettings();
+  return NextResponse.json({ ok: true, settings });
 }
 
 export async function PUT(req) {

@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 
 const DEFAULT_SETTINGS = {
   titre: 'Kwabo',
-  sous_titre: 'sur le formulaire de confirmation de présence au lancement officiel de Synelia Bénin',
+  sous_titre: 'sur le formulaire de confirmation pour le lancement officiel de Synelia Bénin',
   lieu: 'Golden Tulip, Cotonou',
   date_evenement: '22 octobre 2026',
   intro:
-    'Pour une meilleure organisation et nous permettre de vous accueillir dans de meilleures conditions, veuillez renseigner le formulaire ci-dessous.',
+    "Bonjour à tous,\n\nL'évènement se déroulera en 2 étapes : la table ronde en matinée et les ateliers l'après-midi.\n\nAfin d'organiser au mieux cet événement et de préparer un accueil optimal, merci de confirmer votre présence en remplissant ce formulaire.\n\nNous avons hâte d'échanger avec vous autour du thème : Du code du numérique à l'IA — accélérer la transformation numérique du Bénin en renforçant sa souveraineté.",
 };
 
 const ATELIERS = [
@@ -97,10 +97,11 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
           <div>
-            <h1>{settings.titre}</h1>
+            <h1>{settings.titre}*</h1>
             <p className="subtitle">{settings.sous_titre}</p>
           </div>
         </div>
+        <p className="kwabo-note">* Kwabo signifie « Bienvenue »</p>
         <div className="event-meta">
           📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
         </div>
@@ -123,10 +124,11 @@ export default function Home() {
       <div className="header-title">
         <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
         <div>
-          <h1>{settings.titre}</h1>
+          <h1>{settings.titre}*</h1>
           <p className="subtitle">{settings.sous_titre}</p>
         </div>
       </div>
+      <p className="kwabo-note">* Kwabo signifie « Bienvenue »</p>
       <div className="event-meta">
         📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
       </div>
