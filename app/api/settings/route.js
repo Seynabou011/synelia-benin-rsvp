@@ -7,8 +7,17 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const settings = await getSettings();
-  const dbg = await sql`SELECT current_database() AS db, inet_server_addr()::text AS addr`;
-  return NextResponse.json({ ok: true, settings, dbg: dbg.rows[0], envHost: (process.env.POSTGRES_URL || '').split('@')[1] });
+  const dbg = await sql`SELECT current_database() AS db, current_user AS usr, current_schema() AS schema, inet_server_addr()::text AS addr`;
+  const allRows = await sql`SELECT id, titre FROM benin_rsvp_settings`;
+  const url = process.env.POSTGRES_URL || '';
+  return NextResponse.json({
+    ok: true,
+    settings,
+    dbg: dbg.rows[0],
+    allRows: allRows.rows,
+    urlUser: url.split('://')[1]?.split(':')[0],
+    envHost: url.split('@')[1],
+  });
 }
 
 export async function PUT(req) {
@@ -29,11 +38,15 @@ export async function PUT(req) {
     intro: (body?.intro ?? '').toString().trim(),
   };
   const settings = await updateSettings(partial);
-  const dbg = await sql`SELECT current_database() AS db`;
+  const dbg = await sql`SELECT current_database() AS db, current_user AS usr, current_schema() AS schema`;
+  const allRows = await sql`SELECT id, titre FROM benin_rsvp_settings`;
+  const url = process.env.POSTGRES_URL || '';
   return NextResponse.json({
     ok: true,
     settings,
     dbg: dbg.rows[0],
-    envHost: (process.env.POSTGRES_URL || '').split('@')[1],
+    allRows: allRows.rows,
+    urlUser: url.split('://')[1]?.split(':')[0],
+    envHost: url.split('@')[1],
   });
 }
