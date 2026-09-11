@@ -107,11 +107,10 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
           <div>
-            <h1>{settings.titre}*</h1>
+            <h1>{settings.titre}</h1>
             <p className="subtitle">{settings.sous_titre}</p>
           </div>
         </div>
-        <p className="kwabo-note">* Kwabo signifie « Bienvenue »</p>
         <div className="event-meta">
           📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
         </div>
@@ -127,7 +126,6 @@ export default function Home() {
               : "La période de confirmation est terminée. Merci de contacter l'organisation si vous avez une question."}
           </p>
         </div>
-        <p className="footer-note">Synelia — synelia.tech</p>
       </div>
     );
   }
@@ -138,11 +136,10 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
           <div>
-            <h1>{settings.titre}*</h1>
+            <h1>{settings.titre}</h1>
             <p className="subtitle">{settings.sous_titre}</p>
           </div>
         </div>
-        <p className="kwabo-note">* Kwabo signifie « Bienvenue »</p>
         <div className="event-meta">
           📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
         </div>
@@ -155,7 +152,6 @@ export default function Home() {
               : "Nous avons bien noté que vous ne pourrez pas être présent(e). Merci de nous en avoir informés."}
           </p>
         </div>
-        <p className="footer-note">Synelia — synelia.tech</p>
       </div>
     );
   }
@@ -165,11 +161,10 @@ export default function Home() {
       <div className="header-title">
         <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
         <div>
-          <h1>{settings.titre}*</h1>
+          <h1>{settings.titre}</h1>
           <p className="subtitle">{settings.sous_titre}</p>
         </div>
       </div>
-      <p className="kwabo-note">* Kwabo signifie « Bienvenue »</p>
       <div className="event-meta">
         📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
       </div>
@@ -247,8 +242,6 @@ export default function Home() {
           {submitting ? 'Envoi en cours…' : 'Envoyer ma réponse'}
         </button>
       </form>
-
-      <p className="footer-note">Synelia — synelia.tech</p>
     </div>
   );
 }
