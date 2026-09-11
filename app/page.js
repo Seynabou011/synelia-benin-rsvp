@@ -124,10 +124,6 @@ export default function Home() {
       <div className="page">
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
-          <div>
-            <h1><Rich text={settings.titre} /></h1>
-            <p className="subtitle"><Rich text={settings.sous_titre} /></p>
-          </div>
         </div>
         <div className="event-meta">
           📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
@@ -161,10 +157,6 @@ export default function Home() {
       <div className="page">
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
-          <div>
-            <h1><Rich text={settings.titre} /></h1>
-            <p className="subtitle"><Rich text={settings.sous_titre} /></p>
-          </div>
         </div>
         <div className="event-meta">
           📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
@@ -186,10 +178,6 @@ export default function Home() {
     <div className="page">
       <div className="header-title">
         <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
-        <div>
-          <h1><Rich text={settings.titre} /></h1>
-          <p className="subtitle"><Rich text={settings.sous_titre} /></p>
-        </div>
       </div>
       <div className="event-meta">
         📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
