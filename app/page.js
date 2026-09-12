@@ -125,9 +125,6 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
         </div>
-        <div className="event-meta">
-          📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
-        </div>
         <div className="card form-success">
           <h2>
             <Rich
@@ -158,9 +155,6 @@ export default function Home() {
         <div className="header-title">
           <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
         </div>
-        <div className="event-meta">
-          📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
-        </div>
         <div className="card form-success">
           <div className="fs-icon">✓</div>
           <h2>{present ? 'Merci pour votre confirmation !' : 'Merci pour votre réponse'}</h2>
@@ -178,9 +172,6 @@ export default function Home() {
     <div className="page">
       <div className="header-title">
         <img src="/synelia-logo.png" alt="Synelia" className="brand-logo" />
-      </div>
-      <div className="event-meta">
-        📍 {settings.lieu} &nbsp;·&nbsp; 📅 {settings.date_evenement}
       </div>
       <p className="intro-text"><Rich text={settings.intro} /></p>
 
