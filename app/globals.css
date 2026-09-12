@@ -49,7 +49,7 @@ h1{
   line-height:1.2;
   margin:0 0 4px;
   font-weight:700;
-  color:var(--color-primary);
+  color:var(--color-primary-dark);
 }
 .subtitle{color:var(--color-text-sub);margin:0;font-size:13px;}
 
@@ -57,19 +57,21 @@ h1{
   margin-top:var(--space-md);
   display:inline-flex;
   align-items:center;
-  gap:8px;
+  flex-wrap:wrap;
+  gap:4px 8px;
   background:var(--color-primary-mist);
   color:var(--color-primary-dark);
   font-weight:700;
   font-size:13px;
   padding:8px 16px;
   border-radius:var(--radius-pill);
+  max-width:100%;
 }
 .intro-text{
   margin-top:var(--space-md);
   color:var(--color-text-sub);
-  font-size:13.5px;
-  line-height:1.6;
+  font-size:16px;
+  line-height:1.65;
   white-space:pre-line;
 }
 .kwabo-note{
@@ -212,7 +214,7 @@ input:focus{outline:2px solid var(--color-accent);outline-offset:1px;}
 .login-card{max-width:360px;margin:80px auto;}
 .login-card input{margin-bottom:var(--space-md);}
 .admin-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-sm);}
-.admin-actions{display:flex;gap:8px;}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;}
 button.btn{
   padding:9px 16px;
   border-radius:var(--radius-sm);
@@ -250,8 +252,49 @@ tbody tr:hover{background:var(--color-bg-alt);}
 .pill.oui{background:#EAF7F1;color:var(--color-success);}
 .pill.non{background:#FCEBEC;color:var(--color-error);}
 
+/* Responsive — tablette */
+@media (max-width: 760px) {
+  .page{max-width:100%;}
+}
+
+/* Responsive — mobile */
 @media (max-width: 600px) {
-  body{padding:var(--space-sm);}
+  body{padding:var(--space-sm);font-size:15px;}
   .card{padding:var(--space-md);}
-  h1{font-size:1.3rem;}
+  h1{font-size:1.35rem;}
+  .intro-text{font-size:15px;}
+  .event-meta{font-size:12.5px;padding:8px 12px;}
+
+  .presence-toggle{flex-direction:column;gap:8px;}
+  .presence-btn{padding:14px 12px;}
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="datetime-local"],
+  textarea{
+    font-size:16px; /* évite le zoom automatique de Safari iOS au focus */
+    padding:12px;
+  }
+
+  .submit-btn{padding:16px;font-size:15px;}
+
+  .admin-header{flex-direction:column;align-items:flex-start;}
+  .admin-actions{width:100%;}
+  .admin-actions .btn{flex:1 1 auto;}
+
+  .stats-row{gap:8px;}
+  .stat-box{min-width:calc(50% - 8px);}
+  .stat-box .num{font-size:22px;}
+
+  table{font-size:11.5px;}
+  thead th, tbody td{padding:6px;}
+}
+
+@media (max-width: 380px) {
+  body{padding:var(--space-xs);}
+  .card{padding:var(--space-sm);}
+  h1{font-size:1.2rem;}
+  .stat-box{min-width:100%;}
 }
