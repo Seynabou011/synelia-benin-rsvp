@@ -288,18 +288,6 @@ export default function Admin() {
             value={settings.sous_titre}
             onChange={(v) => setSettings({ ...settings, sous_titre: v })}
           />
-          <label>Lieu</label>
-          <input
-            type="text"
-            value={settings.lieu}
-            onChange={(e) => setSettings({ ...settings, lieu: e.target.value })}
-          />
-          <label>Date de l'événement</label>
-          <input
-            type="text"
-            value={settings.date_evenement}
-            onChange={(e) => setSettings({ ...settings, date_evenement: e.target.value })}
-          />
           <BoldField
             label="Texte d'introduction (un saut de ligne = un nouveau paragraphe)"
             value={settings.intro}
