@@ -37,8 +37,20 @@ export async function POST(req) {
   if (!nom) {
     return NextResponse.json({ ok: false, error: 'Le nom est obligatoire.' }, { status: 400 });
   }
-  if (!email && !telephone) {
-    return NextResponse.json({ ok: false, error: 'Merci de renseigner un email ou un téléphone.' }, { status: 400 });
+  if (!fonction) {
+    return NextResponse.json({ ok: false, error: 'La fonction est obligatoire.' }, { status: 400 });
+  }
+  if (!organisation) {
+    return NextResponse.json({ ok: false, error: "L'organisation est obligatoire." }, { status: 400 });
+  }
+  if (!email) {
+    return NextResponse.json({ ok: false, error: "L'email est obligatoire." }, { status: 400 });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ ok: false, error: "L'email n'est pas valide." }, { status: 400 });
+  }
+  if (!telephone) {
+    return NextResponse.json({ ok: false, error: 'Le téléphone est obligatoire.' }, { status: 400 });
   }
 
   await sql`

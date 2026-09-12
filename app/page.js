@@ -75,8 +75,24 @@ export default function Home() {
       setError('Merci de renseigner votre nom.');
       return;
     }
-    if (!email.trim() && !telephone.trim()) {
-      setError('Merci de renseigner un email ou un numéro de téléphone.');
+    if (!fonction.trim()) {
+      setError('Merci de renseigner votre fonction.');
+      return;
+    }
+    if (!organisation.trim()) {
+      setError('Merci de renseigner votre organisation.');
+      return;
+    }
+    if (!email.trim()) {
+      setError('Merci de renseigner votre email.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError('Merci de renseigner un email valide.');
+      return;
+    }
+    if (!telephone.trim()) {
+      setError('Merci de renseigner votre numéro de téléphone.');
       return;
     }
     if (present && !atelier) {
@@ -195,16 +211,16 @@ export default function Home() {
         <label className="required">Nom et prénom</label>
         <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Ex : Aïcha Kouassi" />
 
-        <label>Fonction</label>
+        <label className="required">Fonction</label>
         <input type="text" value={fonction} onChange={(e) => setFonction(e.target.value)} placeholder="Ex : Directrice des systèmes d'information" />
 
-        <label>Organisation</label>
+        <label className="required">Organisation</label>
         <input type="text" value={organisation} onChange={(e) => setOrganisation(e.target.value)} placeholder="Ex : Ministère du Numérique" />
 
-        <label>Email</label>
+        <label className="required">Email</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vous@exemple.com" />
 
-        <label>Téléphone</label>
+        <label className="required">Téléphone</label>
         <input type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="+229 ..." />
 
         {present && (
