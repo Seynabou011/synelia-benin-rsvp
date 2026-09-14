@@ -53,6 +53,9 @@ export async function POST(req) {
   if (present && !telephone) {
     return NextResponse.json({ ok: false, error: 'Le téléphone est obligatoire.' }, { status: 400 });
   }
+  if (present && !atelier) {
+    return NextResponse.json({ ok: false, error: "Le choix de l'atelier est obligatoire." }, { status: 400 });
+  }
 
   await sql`
     INSERT INTO benin_rsvp (nom, fonction, organisation, email, telephone, present, accompagnants, atelier, delegation_note)
