@@ -102,6 +102,7 @@ export default function Admin() {
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [settingsSaved, setSettingsSaved] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [emailConfigured, setEmailConfigured] = useState(null);
 
   useEffect(() => {
     fetch('/api/me')
@@ -132,6 +133,7 @@ export default function Admin() {
     const res = await fetch('/api/settings');
     const data = await res.json();
     if (data.ok) setSettings(data.settings);
+    if (typeof data.emailConfigured === 'boolean') setEmailConfigured(data.emailConfigured);
   }
 
   async function saveSettings(e) {
@@ -416,6 +418,49 @@ export default function Admin() {
             label="Message"
             value={settings.pas_ouvert_message}
             onChange={(v) => setSettings({ ...settings, pas_ouvert_message: v })}
+            multiline
+            rows={3}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Email de confirmation automatique</h3>
+          <div
+            style={{
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-sm)',
+              marginBottom: 8,
+              fontSize: 12.5,
+              background: emailConfigured ? '#EAF7F1' : '#FEF5E6',
+              color: emailConfigured ? 'var(--color-success)' : 'var(--color-warning)',
+            }}
+          >
+            {emailConfigured
+              ? "✓ L'envoi est configuré : chaque confirmation de présence déclenche un email avec invitation calendrier."
+              : "⚠ L'envoi n'est pas encore configuré (variables RESEND_API_KEY / RESEND_FROM manquantes sur Vercel). Les champs ci-dessous sont prêts, mais aucun email ne part pour l'instant."}
+          </div>
+          <p style={{ margin: '0 0 8px', fontSize: 12, color: 'var(--color-text-muted)' }}>
+            Heures locales du Bénin. Utilisées uniquement pour générer l'invitation calendrier jointe à l'email (pas affichées sur le formulaire).
+          </p>
+          <label>Début de l'événement</label>
+          <input
+            type="datetime-local"
+            value={settings.event_start || ''}
+            onChange={(e) => setSettings({ ...settings, event_start: e.target.value })}
+          />
+          <label>Fin de l'événement</label>
+          <input
+            type="datetime-local"
+            value={settings.event_end || ''}
+            onChange={(e) => setSettings({ ...settings, event_end: e.target.value })}
+          />
+          <BoldField
+            label="Objet de l'email"
+            value={settings.email_subject}
+            onChange={(v) => setSettings({ ...settings, email_subject: v })}
+          />
+          <BoldField
+            label="Corps du message"
+            value={settings.email_body}
+            onChange={(v) => setSettings({ ...settings, email_body: v })}
             multiline
             rows={3}
           />

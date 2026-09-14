@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 import { ensureSchema, getSettings, isFormOpen } from '../../../lib/db';
 import { isAdminRequest } from '../../../lib/auth';
+import { sendConfirmationEmail } from '../../../lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,7 +63,18 @@ export async function POST(req) {
     VALUES (${nom}, ${fonction}, ${organisation}, ${email}, ${telephone}, ${present}, ${accompagnants}, ${atelier}, ${delegation_note})
   `;
 
-  return NextResponse.json({ ok: true });
+  let emailSent = false;
+  if (present) {
+    try {
+      const result = await sendConfirmationEmail({ settings, nom, email });
+      emailSent = !!result.sent;
+    } catch (e) {
+      // On ne fait jamais échouer la confirmation de présence à cause d'un souci d'envoi d'email.
+      console.error('Échec envoi email de confirmation:', e);
+    }
+  }
+
+  return NextResponse.json({ ok: true, emailSent });
 }
 
 export async function GET(req) {

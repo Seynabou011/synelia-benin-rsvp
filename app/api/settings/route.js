@@ -4,12 +4,13 @@ import { isAdminRequest } from '../../../lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req) {
   const settings = await getSettings();
-  return NextResponse.json(
-    { ok: true, settings },
-    { headers: { 'Cache-Control': 'no-store, max-age=0' } }
-  );
+  const payload = { ok: true, settings };
+  if (isAdminRequest(req)) {
+    payload.emailConfigured = !!(process.env.RESEND_API_KEY && process.env.RESEND_FROM);
+  }
+  return NextResponse.json(payload, { headers: { 'Cache-Control': 'no-store, max-age=0' } });
 }
 
 export async function PUT(req) {
@@ -46,6 +47,10 @@ export async function PUT(req) {
     programme_am_desc: (body?.programme_am_desc ?? '').toString().trim(),
     privacy_note: (body?.privacy_note ?? '').toString().trim(),
     footer_text: (body?.footer_text ?? '').toString().trim(),
+    event_start: (body?.event_start ?? '').toString().trim(),
+    event_end: (body?.event_end ?? '').toString().trim(),
+    email_subject: (body?.email_subject ?? '').toString().trim(),
+    email_body: (body?.email_body ?? '').toString().trim(),
   };
   const settings = await updateSettings(partial);
   return NextResponse.json(
