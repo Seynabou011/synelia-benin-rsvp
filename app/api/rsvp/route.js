@@ -31,8 +31,9 @@ export async function POST(req) {
   const email = (body?.email || '').trim();
   const telephone = (body?.telephone || '').trim();
   const present = body?.present !== false;
-  const accompagnants = Math.max(0, parseInt(body?.accompagnants, 10) || 0);
+  const accompagnants = present ? Math.max(0, Math.min(3, parseInt(body?.accompagnants, 10) || 0)) : 0;
   const atelier = present ? (body?.atelier || '').trim() : '';
+  const delegation_note = !present ? (body?.delegation_note || '').trim() : '';
 
   if (!nom) {
     return NextResponse.json({ ok: false, error: 'Le nom est obligatoire.' }, { status: 400 });
@@ -49,13 +50,13 @@ export async function POST(req) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ ok: false, error: "L'email n'est pas valide." }, { status: 400 });
   }
-  if (!telephone) {
+  if (present && !telephone) {
     return NextResponse.json({ ok: false, error: 'Le téléphone est obligatoire.' }, { status: 400 });
   }
 
   await sql`
-    INSERT INTO benin_rsvp (nom, fonction, organisation, email, telephone, present, accompagnants, atelier)
-    VALUES (${nom}, ${fonction}, ${organisation}, ${email}, ${telephone}, ${present}, ${accompagnants}, ${atelier})
+    INSERT INTO benin_rsvp (nom, fonction, organisation, email, telephone, present, accompagnants, atelier, delegation_note)
+    VALUES (${nom}, ${fonction}, ${organisation}, ${email}, ${telephone}, ${present}, ${accompagnants}, ${atelier}, ${delegation_note})
   `;
 
   return NextResponse.json({ ok: true });

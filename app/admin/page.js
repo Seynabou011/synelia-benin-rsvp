@@ -192,6 +192,7 @@ export default function Admin() {
         'Présence': r.present ? 'Oui' : 'Non',
         Accompagnants: r.accompagnants,
         Atelier: r.atelier ? ATELIER_LABEL[r.atelier] || r.atelier : '',
+        'Délégation / synthèse': r.delegation_note || '',
         'Date de réponse': new Date(r.created_at).toLocaleString('fr-FR'),
       }));
       const ws = XLSX.utils.json_to_sheet(data);
@@ -279,21 +280,90 @@ export default function Admin() {
           </p>
 
           <BoldField
-            label="Titre d'accueil (ex : Kwabo)"
-            value={settings.titre}
-            onChange={(v) => setSettings({ ...settings, titre: v })}
-          />
-          <BoldField
-            label="Message d'accueil"
+            label="Petit texte au-dessus du titre (ex : Lancement officiel de Synelia Bénin)"
             value={settings.sous_titre}
             onChange={(v) => setSettings({ ...settings, sous_titre: v })}
           />
           <BoldField
-            label="Texte d'introduction (un saut de ligne = un nouveau paragraphe)"
+            label="Titre principal du bandeau (thème de l'événement)"
+            value={settings.titre}
+            onChange={(v) => setSettings({ ...settings, titre: v })}
+            multiline
+            rows={3}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Informations pratiques</h3>
+          <label>Lieu</label>
+          <input
+            type="text"
+            value={settings.lieu || ''}
+            onChange={(e) => setSettings({ ...settings, lieu: e.target.value })}
+          />
+          <label>Date de l'événement</label>
+          <input
+            type="text"
+            value={settings.date_evenement || ''}
+            onChange={(e) => setSettings({ ...settings, date_evenement: e.target.value })}
+          />
+          <label>Horaires</label>
+          <input
+            type="text"
+            value={settings.horaires || ''}
+            onChange={(e) => setSettings({ ...settings, horaires: e.target.value })}
+          />
+          <label>Précision sur l'accueil (ex : Accueil dès 8h00)</label>
+          <input
+            type="text"
+            value={settings.accueil || ''}
+            onChange={(e) => setSettings({ ...settings, accueil: e.target.value })}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Le programme en deux temps</h3>
+          <BoldField
+            label="Matin — Titre"
+            value={settings.programme_matin_titre}
+            onChange={(v) => setSettings({ ...settings, programme_matin_titre: v })}
+          />
+          <BoldField
+            label="Matin — Description"
+            value={settings.programme_matin_desc}
+            onChange={(v) => setSettings({ ...settings, programme_matin_desc: v })}
+            multiline
+            rows={2}
+          />
+          <BoldField
+            label="Après-midi — Titre"
+            value={settings.programme_am_titre}
+            onChange={(v) => setSettings({ ...settings, programme_am_titre: v })}
+          />
+          <BoldField
+            label="Après-midi — Description"
+            value={settings.programme_am_desc}
+            onChange={(v) => setSettings({ ...settings, programme_am_desc: v })}
+            multiline
+            rows={2}
+          />
+
+          <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Carte du formulaire</h3>
+          <BoldField
+            label="Texte d'introduction au-dessus du formulaire"
             value={settings.intro}
             onChange={(v) => setSettings({ ...settings, intro: v })}
             multiline
-            rows={6}
+            rows={3}
+          />
+          <BoldField
+            label="Note de confidentialité (sous le bouton d'envoi)"
+            value={settings.privacy_note}
+            onChange={(v) => setSettings({ ...settings, privacy_note: v })}
+            multiline
+            rows={2}
+          />
+          <label>Pied de page (villes du groupe)</label>
+          <input
+            type="text"
+            value={settings.footer_text || ''}
+            onChange={(e) => setSettings({ ...settings, footer_text: e.target.value })}
           />
 
           <h3 style={{ marginTop: 24, marginBottom: 4, color: 'var(--color-primary-dark)' }}>Ateliers de l'après-midi</h3>
@@ -406,13 +476,14 @@ export default function Admin() {
               <th>Présence</th>
               <th>Accomp.</th>
               <th>Atelier</th>
+              <th>Délégation / synthèse</th>
               <th>Reçu le</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={9} style={{ textAlign: 'center', padding: 24, color: 'var(--color-text-muted)' }}>
+                <td colSpan={10} style={{ textAlign: 'center', padding: 24, color: 'var(--color-text-muted)' }}>
                   {loading ? 'Chargement…' : 'Aucune réponse pour le moment.'}
                 </td>
               </tr>
@@ -429,6 +500,7 @@ export default function Admin() {
                 </td>
                 <td>{r.present ? r.accompagnants : '—'}</td>
                 <td>{r.atelier ? ATELIER_LABEL[r.atelier] || r.atelier : '—'}</td>
+                <td>{r.delegation_note || '—'}</td>
                 <td>{new Date(r.created_at).toLocaleString('fr-FR')}</td>
               </tr>
             ))}

@@ -38,6 +38,14 @@ export async function PUT(req) {
     pas_ouvert_message: (body?.pas_ouvert_message ?? '').toString().trim(),
     ferme_titre: (body?.ferme_titre ?? '').toString().trim(),
     ferme_message: (body?.ferme_message ?? '').toString().trim(),
+    horaires: (body?.horaires ?? '').toString().trim(),
+    accueil: (body?.accueil ?? '').toString().trim(),
+    programme_matin_titre: (body?.programme_matin_titre ?? '').toString().trim(),
+    programme_matin_desc: (body?.programme_matin_desc ?? '').toString().trim(),
+    programme_am_titre: (body?.programme_am_titre ?? '').toString().trim(),
+    programme_am_desc: (body?.programme_am_desc ?? '').toString().trim(),
+    privacy_note: (body?.privacy_note ?? '').toString().trim(),
+    footer_text: (body?.footer_text ?? '').toString().trim(),
   };
   const settings = await updateSettings(partial);
   return NextResponse.json(
