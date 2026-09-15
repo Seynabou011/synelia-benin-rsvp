@@ -37,6 +37,14 @@ export async function POST(req, { params }) {
   const accompagnants = present ? Math.max(0, Math.min(3, parseInt(body?.accompagnants, 10) || 0)) : 0;
   const atelier = present ? (body?.atelier || '').trim() : '';
   const delegation_note = !present ? (body?.delegation_note || '').trim() : '';
+  // Noms des accompagnants : facultatifs, on ne garde que ceux réellement renseignés,
+  // et jamais plus que le nombre d'accompagnants annoncé.
+  const accompagnants_noms = present && accompagnants > 0
+    ? (Array.isArray(body?.accompagnants_noms) ? body.accompagnants_noms : [])
+        .slice(0, accompagnants)
+        .map((n) => (n || '').toString().trim())
+        .filter(Boolean)
+    : [];
 
   if (!nom) {
     return NextResponse.json({ ok: false, error: 'Le nom est obligatoire.' }, { status: 400 });
@@ -61,7 +69,7 @@ export async function POST(req, { params }) {
   }
 
   await insertSubmission(event.id, {
-    nom, fonction, organisation, email, telephone, present, accompagnants, atelier, delegation_note,
+    nom, fonction, organisation, email, telephone, present, accompagnants, atelier, delegation_note, accompagnants_noms,
   });
 
   let emailSent = false;

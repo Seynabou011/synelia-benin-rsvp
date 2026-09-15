@@ -113,6 +113,7 @@ export default function EventRsvp() {
   const [telephone, setTelephone] = useState('');
   const [present, setPresent] = useState(true);
   const [accompagnants, setAccompagnants] = useState('0');
+  const [accompagnantsNoms, setAccompagnantsNoms] = useState([]);
   const [atelier, setAtelier] = useState('');
   const [delegationNote, setDelegationNote] = useState('');
   const [error, setError] = useState('');
@@ -181,6 +182,7 @@ export default function EventRsvp() {
           telephone: telephone.trim(),
           present,
           accompagnants: present ? parseInt(accompagnants, 10) || 0 : 0,
+          accompagnants_noms: present ? accompagnantsNoms.map((n) => n.trim()) : [],
           atelier: present ? atelier : '',
           delegation_note: !present ? delegationNote.trim() : '',
         }),
@@ -365,11 +367,42 @@ export default function EventRsvp() {
                 min="0"
                 max="3"
                 value={accompagnants}
-                onChange={(e) => setAccompagnants(e.target.value)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setAccompagnants(v);
+                  const n = Math.max(0, Math.min(3, parseInt(v, 10) || 0));
+                  setAccompagnantsNoms((prev) => {
+                    const next = prev.slice(0, n);
+                    while (next.length < n) next.push('');
+                    return next;
+                  });
+                }}
               />
               <p className="field-hint">
-                Jusqu'à trois personnes de votre organisation. Nous vous demanderons leurs noms dans l'e-mail de confirmation.
+                Jusqu'à trois personnes de votre organisation.
               </p>
+
+              {accompagnantsNoms.length > 0 && (
+                <>
+                  <label>
+                    Noms des accompagnants <span className="hint">(facultatif)</span>
+                  </label>
+                  {accompagnantsNoms.map((val, i) => (
+                    <input
+                      key={i}
+                      type="text"
+                      value={val}
+                      onChange={(e) => {
+                        const next = [...accompagnantsNoms];
+                        next[i] = e.target.value;
+                        setAccompagnantsNoms(next);
+                      }}
+                      placeholder={`Nom de l'accompagnant ${i + 1}`}
+                      style={{ marginTop: i === 0 ? 6 : 8 }}
+                    />
+                  ))}
+                </>
+              )}
             </>
           )}
 

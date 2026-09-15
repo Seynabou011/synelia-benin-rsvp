@@ -9,6 +9,16 @@ const ATELIER_LABEL_FALLBACK = {
   atelier2: 'Atelier 2',
 };
 
+function parseAccompagnantsNoms(raw) {
+  if (!raw) return [];
+  try {
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr.filter(Boolean) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
 const fieldStyle = {
   width: '100%',
   padding: '10px 12px',
@@ -231,6 +241,7 @@ export default function AdminEvent() {
         'Téléphone': r.telephone,
         'Présence': r.present ? 'Oui' : 'Non',
         Accompagnants: r.accompagnants,
+        'Noms des accompagnants': parseAccompagnantsNoms(r.accompagnants_noms).join(', '),
         Atelier: atelierLabel(r.atelier),
         'Délégation / synthèse': r.delegation_note || '',
         'Date de réponse': new Date(r.created_at).toLocaleString('fr-FR'),
@@ -603,7 +614,14 @@ export default function AdminEvent() {
                 <td>
                   <span className={'pill ' + (r.present ? 'oui' : 'non')}>{r.present ? 'Oui' : 'Non'}</span>
                 </td>
-                <td>{r.present ? r.accompagnants : '—'}</td>
+                <td>
+                  {r.present ? r.accompagnants : '—'}
+                  {r.present && parseAccompagnantsNoms(r.accompagnants_noms).length > 0 && (
+                    <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>
+                      {parseAccompagnantsNoms(r.accompagnants_noms).join(', ')}
+                    </div>
+                  )}
+                </td>
                 <td>
                   {r.atelier
                     ? (r.atelier === 'atelier1' ? settings.atelier1_titre : r.atelier === 'atelier2' ? settings.atelier2_titre : r.atelier) || r.atelier
