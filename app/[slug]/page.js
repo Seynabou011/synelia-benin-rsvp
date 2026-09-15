@@ -169,6 +169,10 @@ export default function EventRsvp() {
       setError("Merci de choisir l'atelier de l'après-midi auquel vous participerez.");
       return;
     }
+    if (present && accompagnantsNoms.length > 0 && accompagnantsNoms.some((n) => !n.trim())) {
+      setError('Merci de renseigner le nom et prénom de chaque accompagnant.');
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch(`/api/events/${slug}/rsvp`, {
@@ -384,9 +388,7 @@ export default function EventRsvp() {
 
               {accompagnantsNoms.length > 0 && (
                 <>
-                  <label>
-                    Noms des accompagnants <span className="hint">(facultatif)</span>
-                  </label>
+                  <label className="required">Nom et prénom de chaque accompagnant</label>
                   {accompagnantsNoms.map((val, i) => (
                     <input
                       key={i}
@@ -397,7 +399,7 @@ export default function EventRsvp() {
                         next[i] = e.target.value;
                         setAccompagnantsNoms(next);
                       }}
-                      placeholder={`Nom de l'accompagnant ${i + 1}`}
+                      placeholder={`Nom et prénom de l'accompagnant ${i + 1}`}
                       style={{ marginTop: i === 0 ? 6 : 8 }}
                     />
                   ))}
