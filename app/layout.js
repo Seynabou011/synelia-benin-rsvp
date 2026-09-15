@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Confirmation de présence — Synelia Bénin',
+  title: 'Confirmation de présence — Synelia',
   icons: {
     icon: '/synelia-logo.png',
     shortcut: '/synelia-logo.png',
