@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 // Doit rester synchronisé avec GENERIC_DEFAULT_SETTINGS dans lib/db.js (ce fichier est un
 // composant client : il ne peut pas importer lib/db.js, qui dépend de modules serveur).
@@ -93,7 +93,18 @@ function SiteFooter({ settings }) {
 
 export default function EventRsvp() {
   const params = useParams();
+  const router = useRouter();
   const slug = params?.slug;
+
+  // rsvp.synelia.tech/benin doit toujours se présenter comme rsvp.synelia.tech (sans "/benin"
+  // visible) : le rewrite next.config.js sert déjà "/" avec le contenu de /benin sans changer
+  // l'URL, donc ici on vérifie l'URL RÉELLE de la barre d'adresse (pas juste le slug résolu,
+  // qui vaut "benin" dans les deux cas) pour ne rediriger que si on est vraiment sur /benin.
+  useEffect(() => {
+    if (slug === 'benin' && typeof window !== 'undefined' && window.location.pathname === '/benin') {
+      router.replace('/');
+    }
+  }, [slug, router]);
 
   const [nom, setNom] = useState('');
   const [fonction, setFonction] = useState('');
