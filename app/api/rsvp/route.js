@@ -64,17 +64,27 @@ export async function POST(req) {
   `;
 
   let emailSent = false;
+  let emailError = null;
   if (present) {
     try {
       const result = await sendConfirmationEmail({ settings, nom, email });
       emailSent = !!result.sent;
+      if (!result.sent) emailError = result.reason || 'unknown';
     } catch (e) {
       // On ne fait jamais échouer la confirmation de présence à cause d'un souci d'envoi d'email.
       console.error('Échec envoi email de confirmation:', e);
+      emailError = e?.message || String(e);
     }
   }
 
-  return NextResponse.json({ ok: true, emailSent });
+  const payload = { ok: true, emailSent };
+  // Diagnostic temporaire : le détail de l'erreur d'envoi n'est visible que par un admin connecté,
+  // jamais exposé aux visiteurs du formulaire public.
+  if (emailError && isAdminRequest(req)) {
+    payload.emailError = emailError;
+  }
+
+  return NextResponse.json(payload);
 }
 
 export async function GET(req) {
