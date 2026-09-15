@@ -136,6 +136,25 @@ export default function AdminEvent() {
     }
   }
 
+  const [deletingId, setDeletingId] = useState(null);
+
+  async function handleDeleteRow(row) {
+    const ok = window.confirm(`Supprimer la réponse de "${row.nom}" ? Cette action est irréversible.`);
+    if (!ok) return;
+    setDeletingId(row.id);
+    try {
+      const res = await fetch(`/api/events/${slug}/rsvp/${row.id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.ok) {
+        setRows((prev) => prev.filter((r) => r.id !== row.id));
+      } else {
+        alert(data.error || 'Erreur lors de la suppression.');
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   async function loadSettings() {
     const res = await fetch(`/api/events/${slug}/settings`);
     const data = await res.json();
@@ -563,12 +582,13 @@ export default function AdminEvent() {
               <th>Atelier</th>
               <th>Délégation / synthèse</th>
               <th>Reçu le</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={10} style={{ textAlign: 'center', padding: 24, color: 'var(--color-text-muted)' }}>
+                <td colSpan={11} style={{ textAlign: 'center', padding: 24, color: 'var(--color-text-muted)' }}>
                   {loading ? 'Chargement…' : 'Aucune réponse pour le moment.'}
                 </td>
               </tr>
@@ -591,6 +611,17 @@ export default function AdminEvent() {
                 </td>
                 <td>{r.delegation_note || '—'}</td>
                 <td>{new Date(r.created_at).toLocaleString('fr-FR')}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn"
+                    style={{ fontSize: 12, padding: '4px 10px', color: 'var(--color-error)', borderColor: 'var(--color-error)' }}
+                    onClick={() => handleDeleteRow(r)}
+                    disabled={deletingId === r.id}
+                  >
+                    {deletingId === r.id ? '…' : 'Supprimer'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

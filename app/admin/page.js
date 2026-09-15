@@ -52,6 +52,27 @@ export default function AdminHome() {
     }
   }
 
+  const [deletingSlug, setDeletingSlug] = useState(null);
+
+  async function handleDeleteEvent(ev) {
+    const ok = window.confirm(
+      `Supprimer l'événement "${ev.name}" ainsi que TOUTES ses réponses enregistrées ? Cette action est irréversible.`
+    );
+    if (!ok) return;
+    setDeletingSlug(ev.slug);
+    try {
+      const res = await fetch(`/api/events/${ev.slug}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.ok) {
+        setEvents((prev) => prev.filter((e) => e.slug !== ev.slug));
+      } else {
+        alert(data.error || 'Erreur lors de la suppression.');
+      }
+    } finally {
+      setDeletingSlug(null);
+    }
+  }
+
   async function handleLogin(e) {
     e.preventDefault();
     setLoginError('');
@@ -215,12 +236,13 @@ export default function AdminHome() {
               <th>Lien public</th>
               <th>Créé le</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {events.length === 0 && (
               <tr>
-                <td colSpan={4} style={{ textAlign: 'center', padding: 24, color: 'var(--color-text-muted)' }}>
+                <td colSpan={5} style={{ textAlign: 'center', padding: 24, color: 'var(--color-text-muted)' }}>
                   {loading ? 'Chargement…' : 'Aucun événement pour le moment.'}
                 </td>
               </tr>
@@ -234,6 +256,17 @@ export default function AdminHome() {
                   <Link href={`/admin/${ev.slug}`} className="btn primary">
                     Gérer
                   </Link>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn"
+                    style={{ fontSize: 12, padding: '4px 10px', color: 'var(--color-error)', borderColor: 'var(--color-error)' }}
+                    onClick={() => handleDeleteEvent(ev)}
+                    disabled={deletingSlug === ev.slug}
+                  >
+                    {deletingSlug === ev.slug ? '…' : 'Supprimer'}
+                  </button>
                 </td>
               </tr>
             ))}
